@@ -3,6 +3,7 @@ plugins {
     id 'idea'
     id 'org.springframework.boot' version '2.6.3'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'com.google.cloud.tools.jib'
 }
 
 group = 'dev.appkr'
@@ -42,3 +43,40 @@ processResources {
     }
 }
 processResources.dependsOn ':frontend:webpackBuild'
+
+def getGitHash = { ->
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'rev-parse', '--short', 'HEAD'
+        standardOutput = stdout
+    }
+    return stdout.toString().trim()
+}
+
+jib {
+    from {
+        image = 'amazoncorretto:11-alpine-jdk'
+    }
+
+    to {
+        image = "${project.name}"
+        tags = ['latest', "${project.version}".toString(), getGitHash()]
+    }
+
+    containerizingMode = 'packaged'
+
+    container {
+        jvmFlags = [
+                '-XX:+UseContainerSupport',
+                '-XX:+HeapDumpOnOutOfMemoryError',
+                '-XX:HeapDumpPath=/tmp',
+                '-XX:+UseG1GC',
+                '-Djava.net.preferIPv4Stack=true',
+                '-Duser.timezone=Asia/Seoul',
+                '-Dfile.encoding=UTF8',
+                '-Dsun.net.inetaddr.ttl=30'
+        ]
+        ports = ['8080']
+        creationTime = 'USE_CURRENT_TIMESTAMP'
+    }
+}
