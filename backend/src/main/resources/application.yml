@@ -3,3 +3,10 @@ spring:
     url: r2dbc:mysql://localhost:3306/webflux_vue3?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC
     username: root
     password: secret
+
+  security:
+    # https://docs.spring.io/spring-security/site/docs/5.2.12.RELEASE/reference/html/webflux-oauth2.html#webflux-oauth2-resource-server
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:9999/.well-known/jwks.json

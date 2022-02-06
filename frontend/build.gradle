@@ -5,13 +5,18 @@ plugins {
     id 'org.openapi.generator'
 }
 
-task webpackBuild(type: YarnTask) {
+task yarnInstall(type: YarnTask)
+
+task yarnBuild(type: YarnTask) {
+    dependsOn(yarnInstall)
     args = ['build']
 }
 
-task webpackClean(type: Delete) {
+task yarnClean(type: Delete) {
     delete 'dist'
 }
+
+clean.dependsOn yarnClean
 
 openApiGenerate {
     generatorName = 'typescript-axios'
@@ -24,7 +29,6 @@ task openApiClean(type: Delete) {
     delete 'src/service'
 }
 
-clean.dependsOn webpackClean
 clean.dependsOn openApiClean
 compileJava.dependsOn 'openApiGenerate'
 

@@ -3,7 +3,7 @@ openapi: '3.0.1'
 info:
   title: 'application'
   version: 0.0.1
-  description:
+  description: ''
 
 servers:
   - url: http://localhost:8080
@@ -13,8 +13,8 @@ paths:
 
   /api/examples:
     get:
-      description:
-      operationId: list
+      description: ''
+      operationId: listExamples
       tags:
         - Example
       responses:
@@ -23,15 +23,15 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Example'
+                $ref: '#/components/schemas/ExampleList'
         '400':
           $ref: '#/components/responses/BadRequest'
         '500':
           $ref: '#/components/responses/ServerError'
 
     post:
-      description:
-      operationId: create
+      description: ''
+      operationId: createExample
       tags:
         - Example
       requestBody:
@@ -97,9 +97,18 @@ components:
       type: object
       properties:
         id:
-          type: string
+          type: integer
+          format: int64
         name:
           type: string
+
+    ExampleList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Example'
 
   parameters: {}
 
