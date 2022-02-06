@@ -1,4 +1,5 @@
 rootProject.name = 'application'
 
+include('apispec')
 include('frontend')
 include('backend')

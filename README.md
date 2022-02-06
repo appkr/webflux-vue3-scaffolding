@@ -5,7 +5,7 @@ spring webflux + vusjs 3 setup
 ./gradlew up
 
 # start application
-./gradlew clean backend:bootRun
+./gradlew clean bootRun
 
 open http://localhost:8080
 ```

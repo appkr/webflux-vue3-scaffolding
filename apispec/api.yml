@@ -1,0 +1,122 @@
+openapi: '3.0.1'
+
+info:
+  title: 'application'
+  version: 0.0.1
+  description:
+
+servers:
+  - url: http://localhost:8080
+    description: local
+
+paths:
+
+  /api/examples:
+    get:
+      description:
+      operationId: list
+      tags:
+        - Example
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Example'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    post:
+      description:
+      operationId: create
+      tags:
+        - Example
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Example'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Example'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+components:
+  schemas:
+
+    #----------------------------------------
+    # Common Model
+    #----------------------------------------
+
+    ProblemDetails:
+      type: object
+      properties:
+        type:
+          type: string
+          format: uri
+        title:
+          type: string
+          example: 제출한 요청이 유효하지 않습니다
+        detail:
+          type: string
+        fieldErrors:
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/FieldError'
+
+    FieldError:
+      type: object
+      properties:
+        field:
+          type: string
+        message:
+          $ref: '#/components/schemas/ErrorCode'
+
+    ErrorCode:
+      type: string
+      example:
+        - NotNull
+        - Size
+
+    #----------------------------------------
+    # API Model
+    #----------------------------------------
+
+    Example:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+
+  parameters: {}
+
+  responses:
+
+    BadRequest:
+      description: Bad Request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+
+    ServerError:
+      description: Internal Server Error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+
+security: []

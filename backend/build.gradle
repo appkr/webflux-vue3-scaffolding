@@ -1,13 +1,12 @@
 plugins {
     id 'java'
     id 'idea'
-    id 'org.springframework.boot' version '2.6.3'
-    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
     id 'com.google.cloud.tools.jib'
+    id 'org.openapi.generator'
 }
 
-group = 'dev.appkr'
-version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
 configurations {
@@ -17,15 +16,24 @@ configurations {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
-    compileOnly 'org.projectlombok:lombok'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+
+    implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
     runtimeOnly 'dev.miku:r2dbc-mysql'
     runtimeOnly 'mysql:mysql-connector-java'
+
+    implementation 'io.springfox:springfox-swagger2:3.0.0'
+    implementation 'org.openapitools:jackson-databind-nullable:0.2.2'
+
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+    compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.projectreactor:reactor-test'
 }
@@ -33,16 +41,6 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
-
-processResources {
-    from('../frontend/dist/') {
-        it.eachFile {
-            print it.getName();
-        }
-        into 'public'
-    }
-}
-processResources.dependsOn ':frontend:webpackBuild'
 
 def getGitHash = { ->
     def stdout = new ByteArrayOutputStream()
@@ -80,3 +78,45 @@ jib {
         creationTime = 'USE_CURRENT_TIMESTAMP'
     }
 }
+
+openApiGenerate {
+    generatorName = 'spring'
+    inputSpec = "${rootDir}/apispec/api.yml".toString()
+    outputDir = "${buildDir}/openapi".toString()
+    apiPackage = 'dev.appkr.api'
+    modelPackage = 'dev.appkr.api.model'
+    modelNameSuffix = 'Dto'
+    apiFilesConstrainedTo = ['']
+    modelFilesConstrainedTo = ['']
+    supportingFilesConstrainedTo = ['ApiUtil.java']
+    configOptions = [
+            reactive: 'true',
+            delegatePattern: 'true',
+            useTags: 'true',
+            dateLibrary: 'java8',
+            java8: 'true',
+            hideGenerationTimestamp: 'true'
+    ]
+    validateSpec = true
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir file("${project.buildDir.path}/openapi/src/main/java")
+        }
+    }
+}
+
+compileJava.dependsOn 'openApiGenerate'
+
+processResources {
+    from('../frontend/dist/') {
+        it.eachFile {
+            print it.getName();
+        }
+        into 'public'
+    }
+}
+
+processResources.dependsOn ':frontend:webpackBuild'
