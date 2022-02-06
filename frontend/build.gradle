@@ -4,11 +4,15 @@ plugins {
 }
 
 task webpackBuild(type: YarnTask) {
-    args = ['run', 'build']
+    args = ['build']
 }
 
-task webpackClean(type: YarnTask) {
-    args = ['run', 'clean']
+task webpackClean(type: Delete) {
+    delete 'dist'
 }
 
 clean.dependsOn webpackClean
+
+gradle.buildFinished {
+    project.buildDir.deleteDir()
+}
