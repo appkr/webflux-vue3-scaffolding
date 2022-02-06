@@ -1,0 +1,14 @@
+plugins {
+    id 'java'
+    id 'com.github.node-gradle.node' version '3.1.1'
+}
+
+task webpackBuild(type: YarnTask) {
+    args = ['run', 'build']
+}
+
+task webpackClean(type: YarnTask) {
+    args = ['run', 'clean']
+}
+
+clean.dependsOn webpackClean

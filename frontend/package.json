@@ -1,0 +1,7 @@
+{
+  "name": "frontend",
+  "scripts": {
+    "build": "echo \"run\" && exit 0",
+    "clean": "echo \"clean\" && exit 0"
+  }
+}
