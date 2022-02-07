@@ -27,7 +27,7 @@ curl -s -H "Authorization: bearer $ACCESS_TOKEN" GET 'http://localhost:8080/api/
 ### frontend develop
 
 ```bash
-cd frontend && npm install && npm run serve
+cd frontend && yarn && yarn serve
 ```
 
 ### docker deploy (frontend + backend)
