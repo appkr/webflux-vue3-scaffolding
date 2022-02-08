@@ -1,6 +1,8 @@
 package dev.appkr;
 
 import java.security.GeneralSecurityException;
+import java.util.Arrays;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +19,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.reactive.CorsWebFilter;
+import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 import org.zalando.problem.spring.webflux.advice.security.SecurityProblemSupport;
 
 @Configuration
@@ -41,13 +46,28 @@ public class SecurityConfiguration {
             .pathMatchers("/actuator/**").authenticated()
             .pathMatchers("/", "/js/**", "/css/**", "/img/**").permitAll()
             .pathMatchers("/api/login", "/api/refresh").permitAll()
-            .pathMatchers("/api/**").authenticated()
+            .pathMatchers("/api/**").permitAll()//.authenticated()
             .anyExchange().authenticated())
         .oauth2ResourceServer(OAuth2ResourceServerSpec::jwt)
         .exceptionHandling(spec -> spec.authenticationEntryPoint(problemSupport)
             .accessDeniedHandler(problemSupport))
         .build();
     // @formatter:on
+  }
+
+  @Bean
+  public CorsWebFilter corsWebFilter() {
+    CorsConfiguration corsConfig = new CorsConfiguration();
+    corsConfig.setAllowedOrigins(Arrays.asList("*"));
+    corsConfig.setMaxAge(3600L);
+    corsConfig.addAllowedMethod("*");
+    corsConfig.addAllowedHeader("*");
+
+    UrlBasedCorsConfigurationSource source =
+        new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", corsConfig);
+
+    return new CorsWebFilter(source);
   }
 
   @Bean
