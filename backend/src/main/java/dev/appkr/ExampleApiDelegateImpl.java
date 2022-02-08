@@ -20,17 +20,17 @@ public class ExampleApiDelegateImpl implements ExampleApiDelegate {
     return exampleDto.map(dto -> new Example(dto.getName()))                        // Mono<Example>
         .flatMap(entity -> repository.save(entity))                                 // Mono<Example>
         .map(entity -> new ExampleDto().id(entity.getId()).name(entity.getName()))  // Mono<ExampleDto>
-        .map(dto -> ResponseEntity.ok(dto));                                        // Mono<ResponseEntity<ExampleDto>>
+        .map(dto -> ResponseEntity.ok(dto))                                         // Mono<ResponseEntity<ExampleDto>>
+        ;
   }
 
   @Override
   public Mono<ResponseEntity<ExampleListDto>> listExamples(ServerWebExchange exchange) {
-    final ExampleListDto listDto = new ExampleListDto();
-    repository.findAll()                                                            // Flux<Example>
+    return repository.findAll()                                                     // Flux<Example>
         .map(entity -> new ExampleDto().id(entity.getId()).name(entity.getName()))  // Flux<ExampleDto>
-        .map(dto -> listDto.addDataItem(dto))                                       // Flux<ListExampleDto>
-        .subscribe();
-
-    return Mono.just(ResponseEntity.ok(listDto));
+        .collectList()                                                              // Mono<List<ExampleDto>>
+        .map(list -> new ExampleListDto().data(list))                               // Mono<ExampleListDto>
+        .map(dtoList -> ResponseEntity.ok(dtoList))                                 // Mono<ResponseEntity<ExampleListDto>>
+        ;
   }
 }
