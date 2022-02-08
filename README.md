@@ -15,18 +15,22 @@
 ~/webflux-vue3-scaffolding $ ./gradlew clean bootRun
 
 # test
-open http://localhost:8080
+open http://localhost:8090
 
 RESPONSE=$(curl -s -X POST 'http://localhost:9999/oauth/token' -H 'Content-Type: application/x-www-form-urlencoded' -H 'Accept: application/json' -H 'Authorization: Basic d2ViX2FwcDpjaGFuZ2VpdA==' -d 'grant_type=password&username=user&password=user&scope=openid')
 ACCESS_TOKEN=$(echo $RESPONSE | jq .access_token | xargs)
 
-curl -s -H "Authorization: bearer $ACCESS_TOKEN" GET 'http://localhost:8080/api/examples'
-curl -s -H "Authorization: bearer $ACCESS_TOKEN" GET 'http://localhost:8080/api/users' 
+curl -s -H "Authorization: bearer $ACCESS_TOKEN" GET 'http://localhost:8090/api/examples'
+curl -s -H "Authorization: bearer $ACCESS_TOKEN" GET 'http://localhost:8090/api/users' 
 ```
 
 ### frontend develop
 
 ```bash
+# generate openapi stub
+./gradlew :frontend:build
+
+# start local development server
 cd frontend && yarn && yarn serve
 ```
 

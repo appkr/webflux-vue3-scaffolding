@@ -80,7 +80,7 @@ jib {
                 '-Dfile.encoding=UTF8',
                 '-Dsun.net.inetaddr.ttl=30'
         ]
-        ports = ['8080']
+        ports = ['8090']
         creationTime = 'USE_CURRENT_TIMESTAMP'
     }
 }
