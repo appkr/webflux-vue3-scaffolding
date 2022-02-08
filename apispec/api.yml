@@ -95,12 +95,16 @@ components:
 
     Example:
       type: object
+      required:
+        - name
       properties:
         id:
           type: integer
           format: int64
         name:
           type: string
+          minLength: 1
+          maxLength: 255
 
     ExampleList:
       type: object

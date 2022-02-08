@@ -44,7 +44,7 @@ public class SecurityConfiguration {
         .authorizeExchange(spec -> spec.pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
             .pathMatchers("/actuator/health", "/actuator/info").permitAll()
             .pathMatchers("/actuator/**").authenticated()
-            .pathMatchers("/", "/js/**", "/css/**", "/img/**").permitAll()
+            .pathMatchers("/", "/index.html", "/favicon.ico", "/js/**", "/css/**", "/img/**").permitAll()
             .pathMatchers("/api/login", "/api/refresh").permitAll()
             .pathMatchers("/api/**").permitAll()//.authenticated()
             .anyExchange().authenticated())
