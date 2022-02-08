@@ -30,7 +30,7 @@ task openApiClean(type: Delete) {
 }
 
 clean.dependsOn openApiClean
-compileJava.dependsOn 'openApiGenerate'
+yarnBuild.dependsOn 'openApiGenerate'
 
 gradle.buildFinished {
     project.buildDir.deleteDir()
