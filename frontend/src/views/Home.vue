@@ -12,42 +12,26 @@
 </template>
 
 <script lang="ts">
-import { onMounted, ref } from 'vue'
-import { Configuration, ExampleApiFactory, ExampleList } from '@/service'
+import { defineComponent, ref } from 'vue'
 import TextField from '@/components/TextField.vue'
 import SubmitButton from '@/components/SubmitButton.vue'
+import exampleApiClient from '@/composables/exampleApiClient'
 
-export default {
+export default defineComponent({
   components: { SubmitButton, TextField },
   setup (): Record<string, unknown> {
-    const configuration = new Configuration({ basePath: 'http://localhost:8090' })
-    const apiClient = ExampleApiFactory(configuration)
-    const listExamples = () => {
-      apiClient.listExamples()
-        .then((res) => {
-          exampleList.value = res.data
-        })
-    }
+    const { exampleList, problem } = exampleApiClient.listExamples()
 
-    const exampleList = ref<ExampleList>({})
     const name = ref<string>('')
     const submitting = ref<boolean>(false)
-    const problem = ref<string|null>(null)
 
     const onSubmit = () => {
       submitting.value = true
-      apiClient.createExample({ name: name.value })
-        .then(() => {
-          listExamples()
-          name.value = ''
-        }).catch(err => {
-          problem.value = err.response.data.violations[0].message
-        }).finally(() => {
+      exampleApiClient.createExample(name)
+        .finally(() => {
           submitting.value = false
         })
     }
-
-    onMounted(listExamples)
 
     return {
       exampleList,
@@ -57,5 +41,5 @@ export default {
       problem
     }
   }
-}
+})
 </script>

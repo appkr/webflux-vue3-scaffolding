@@ -7,14 +7,12 @@
 </template>
 
 <script>
-export default {
+import { defineComponent } from 'vue'
+
+export default defineComponent({
   name: 'SubmitButton',
   props: {
     submitting: Boolean
   }
-}
+})
 </script>
-
-<style scoped>
-
-</style>

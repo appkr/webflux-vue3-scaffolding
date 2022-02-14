@@ -8,17 +8,33 @@
            @change="$emit('update:modelValue', $event.target.value)"
     />
   </div>
-  <div v-show="problem" class="is-size-7 has-text-danger">{{ problem }}</div>
+  <div v-show="errorMessage" class="is-size-7 has-text-danger">{{ errorMessage }}</div>
 </template>
 
 <script>
-export default {
+import { defineComponent, computed } from 'vue'
+
+export default defineComponent({
   name: 'TextField',
   props: {
     id: String,
     labelText: String,
     modelValue: String,
-    problem: String
+    problem: Object
+  },
+  setup (props) {
+    const errorMessage = computed(() => {
+      if (props.problem) {
+        const fieldErrors = props.problem.violations.filter(violation => violation.field === 'name')
+        if (fieldErrors.length > 0) {
+          return fieldErrors[0].message
+        }
+      }
+
+      return null
+    })
+
+    return { errorMessage }
   }
-}
+})
 </script>
