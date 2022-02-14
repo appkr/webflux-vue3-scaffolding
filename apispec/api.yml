@@ -17,6 +17,7 @@ paths:
       operationId: login
       tags:
         - Auth
+      security: []
       requestBody:
         content:
           application/json:
@@ -40,6 +41,7 @@ paths:
       operationId: refresh
       tags:
         - Auth
+      security: []
       requestBody:
         content:
           application/json:
@@ -98,6 +100,12 @@ paths:
           $ref: '#/components/responses/ServerError'
 
 components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+
   schemas:
 
     #----------------------------------------
@@ -225,4 +233,5 @@ components:
           schema:
             $ref: '#/components/schemas/ProblemDetails'
 
-security: []
+security:
+  - ApiKeyAuth: []

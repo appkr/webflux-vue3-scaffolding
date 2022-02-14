@@ -15,14 +15,13 @@
 import { defineComponent, computed } from 'vue'
 
 export default defineComponent({
-  name: 'TextField',
   props: {
     id: String,
     labelText: String,
     modelValue: String,
     problem: Object
   },
-  setup (props) {
+  setup(props) {
     const errorMessage = computed(() => {
       if (props.problem) {
         const fieldErrors = props.problem.violations.filter(violation => violation.field === 'name')

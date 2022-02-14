@@ -21,12 +21,12 @@ clean.dependsOn yarnClean
 openApiGenerate {
     generatorName = 'typescript-axios'
     inputSpec = "${rootDir}/apispec/api.yml".toString()
-    outputDir = "${projectDir}/src/service".toString()
+    outputDir = "${projectDir}/src/infra/api".toString()
     validateSpec = true
 }
 
 task openApiClean(type: Delete) {
-    delete 'src/service'
+    delete 'src/infra/api'
 }
 
 clean.dependsOn openApiClean
