@@ -46,7 +46,7 @@ public class SecurityConfiguration {
             .pathMatchers("/actuator/**").authenticated()
             .pathMatchers("/", "/index.html", "/favicon.ico", "/js/**", "/css/**", "/img/**").permitAll()
             .pathMatchers("/api/login", "/api/refresh").permitAll()
-            .pathMatchers("/api/**").permitAll()//.authenticated()
+            .pathMatchers("/api/**").authenticated()
             .anyExchange().authenticated())
         .oauth2ResourceServer(OAuth2ResourceServerSpec::jwt)
         .exceptionHandling(spec -> spec.authenticationEntryPoint(problemSupport)

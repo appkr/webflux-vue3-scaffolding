@@ -13,3 +13,8 @@ spring:
       resourceserver:
         jwt:
           jwk-set-uri: http://localhost:9999/.well-known/jwks.json
+
+application:
+  uaa:
+    client-id: web_app
+    client-secret: changeit

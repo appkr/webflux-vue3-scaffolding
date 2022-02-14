@@ -11,6 +11,52 @@ servers:
 
 paths:
 
+  /api/login:
+    post:
+      description: ''
+      operationId: login
+      tags:
+        - Auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UaaToken'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/refresh:
+    post:
+      description: ''
+      operationId: refresh
+      tags:
+        - Auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshRequest'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UaaToken'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
   /api/examples:
     get:
       description: ''
@@ -92,6 +138,53 @@ components:
     #----------------------------------------
     # API Model
     #----------------------------------------
+
+    LoginRequest:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+
+    RefreshRequest:
+      type: object
+      required:
+        - refresh_token
+      properties:
+        refresh_token:
+          $ref: '#/components/schemas/RefreshToken'
+
+    UaaToken:
+      type: object
+      properties:
+        access_token:
+          $ref: '#/components/schemas/AccessToken'
+        refresh_token:
+          $ref: '#/components/schemas/RefreshToken'
+        token_type:
+          type: string
+        expires_in:
+          type: integer
+          format: int64
+        scope:
+          type: string
+        iat:
+          type: integer
+          format: int64
+        jti:
+          type: string
+
+    AccessToken:
+      type: string
+      example: header.payload.signature
+
+    RefreshToken:
+      type: string
+      example: header.payload.signature
 
     Example:
       type: object
