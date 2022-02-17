@@ -36,36 +36,30 @@
   </nav>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, ref } from 'vue'
+<script setup lang="ts">
+import { computed, ref } from 'vue'
 import { AuthTokenRepository } from '@/infra/AuthTokenRepository'
 import { useRouter } from 'vue-router'
 
-export default defineComponent({
-  setup(): Record<string, unknown> {
-    const showMenu = ref(false)
+const showMenu = ref(false)
 
-    const toggleMenu = () => {
-      showMenu.value = !showMenu.value
-    }
+const toggleMenu = () => {
+  showMenu.value = !showMenu.value
+}
 
-    const repository = new AuthTokenRepository()
-    const username = computed(() => {
-      return repository.getUsername()
-    })
-
-    const isLoggedIn = computed(() => {
-      // TODO 로그인/로그아웃할 때 뷰가 리프레시 되지 않는 문제 있음
-      return !repository.isExpired()
-    })
-
-    const router = useRouter()
-    const logout = () => {
-      repository.remove()
-      router.push('/login')
-    }
-
-    return { showMenu, toggleMenu, isLoggedIn, username, logout }
-  }
+const repository = new AuthTokenRepository()
+const username = computed(() => {
+  return repository.getUsername()
 })
+
+const isLoggedIn = computed(() => {
+  // TODO 로그인/로그아웃할 때 뷰가 리프레시 되지 않는 문제 있음
+  return !repository.isExpired()
+})
+
+const router = useRouter()
+const logout = () => {
+  repository.remove()
+  router.push('/login')
+}
 </script>

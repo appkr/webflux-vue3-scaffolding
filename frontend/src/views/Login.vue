@@ -6,40 +6,33 @@
   </form>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from 'vue'
+<script setup lang="ts">
+import { ref } from 'vue'
 import TextField from '@/components/TextField.vue'
 import PasswordField from '@/components/PasswordField.vue'
 import Button from '@/components/Button.vue'
 import { AuthApiClient } from '@/infra/AuthApiClient'
-import { LoginRequest, ProblemDetails } from '@/infra/api/'
+import { ProblemDetails } from '@/infra/api/'
 import { useRouter } from 'vue-router'
 
-export default defineComponent({
-  components: { Button, TextField, PasswordField },
-  setup(): Record<string, unknown> {
-    const username = ref<string>('')
-    const password = ref<string>('')
-    const submitting = ref(false)
-    const problem = ref<ProblemDetails>()
-    const authApiClient = new AuthApiClient()
-    const router = useRouter()
+const username = ref<string>('')
+const password = ref<string>('')
+const submitting = ref(false)
+const problem = ref<ProblemDetails>()
+const authApiClient = new AuthApiClient()
+const router = useRouter()
 
-    const onSubmit = () => {
-      submitting.value = true
-      authApiClient.login({ username: username.value, password: password.value })
-        .then(() => {
-          router.push('/')
-        })
-        .catch(err => {
-          problem.value = err
-        })
-        .finally(() => {
-          submitting.value = false
-        })
-    }
-
-    return { username, password, submitting, onSubmit, problem }
-  }
-})
+const onSubmit = () => {
+  submitting.value = true
+  authApiClient.login({ username: username.value, password: password.value })
+    .then(() => {
+      router.push('/')
+    })
+    .catch(err => {
+      problem.value = err
+    })
+    .finally(() => {
+      submitting.value = false
+    })
+}
 </script>

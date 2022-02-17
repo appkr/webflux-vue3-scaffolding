@@ -11,50 +11,43 @@
   </ul>
 </template>
 
-<script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue'
+<script setup lang="ts">
+import { onMounted, ref } from 'vue'
 import Button from '@/components/Button.vue'
 import TextField from '@/components/TextField.vue'
 import { ExampleApiClient } from '@/infra/ExampleApiClient'
-import { Example, ExampleList, ProblemDetails } from '@/infra/api'
+import { ExampleList, ProblemDetails } from '@/infra/api'
 
-export default defineComponent({
-  components: { Button, TextField },
-  setup(): Record<string, unknown> {
-    const exampleList = ref<ExampleList>({ data: [] })
-    const name = ref<string>('')
-    const submitting = ref(false)
-    const problem = ref<ProblemDetails>()
-    const exampleApiClient = new ExampleApiClient()
+const exampleList = ref<ExampleList>({ data: [] })
+const name = ref<string>('')
+const submitting = ref(false)
+const problem = ref<ProblemDetails>()
+const exampleApiClient = new ExampleApiClient()
 
-    const onSubmit = () => {
-      submitting.value = true
-      exampleApiClient.createExample({ name: name.value })
-        .then(() => {
-          name.value = ''
-          load()
-        })
-        .catch(err => {
-          problem.value = err
-        })
-        .finally(() => {
-          submitting.value = false
-        })
-    }
+const onSubmit = () => {
+  submitting.value = true
+  exampleApiClient.createExample({ name: name.value })
+    .then(() => {
+      name.value = ''
+      load()
+    })
+    .catch(err => {
+      problem.value = err
+    })
+    .finally(() => {
+      submitting.value = false
+    })
+}
 
-    const load = () => {
-      exampleApiClient.listExamples()
-        .then(res => {
-          exampleList.value = res
-        })
-        .catch(err => {
-          problem.value = err
-        })
-    }
+const load = () => {
+  exampleApiClient.listExamples()
+    .then(res => {
+      exampleList.value = res
+    })
+    .catch(err => {
+      problem.value = err
+    })
+}
 
-    onMounted(load)
-
-    return { exampleList, name, submitting, problem, onSubmit }
-  }
-})
+onMounted(load)
 </script>

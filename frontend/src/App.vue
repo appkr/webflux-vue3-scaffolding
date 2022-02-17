@@ -6,12 +6,8 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import NavBar from '@/components/NavBar.vue'
-
-export default {
-  components: { NavBar }
-}
 </script>
 
 <style>

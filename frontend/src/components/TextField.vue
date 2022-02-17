@@ -11,29 +11,25 @@
   <div v-show="errorMessage" class="is-size-7 has-text-danger">{{ errorMessage }}</div>
 </template>
 
-<script>
-import { defineComponent, computed } from 'vue'
+<script setup lang="ts">
+import { computed, defineProps } from 'vue'
+import { ProblemDetails } from '@/infra/api'
 
-export default defineComponent({
-  props: {
-    id: String,
-    labelText: String,
-    modelValue: String,
-    problem: Object
-  },
-  setup(props) {
-    const errorMessage = computed(() => {
-      if (props.problem) {
-        const fieldErrors = props.problem.violations.filter(violation => violation.field === 'name')
-        if (fieldErrors.length > 0) {
-          return fieldErrors[0].message
-        }
-      }
+const props = defineProps<{
+  id: string,
+  labelText: string,
+  modelValue: string,
+  problem: ProblemDetails
+}>()
 
-      return null
-    })
-
-    return { errorMessage }
+const errorMessage = computed(() => {
+  if (props.problem) {
+    const fieldErrors = props.problem.violations.filter(violation => violation.field === props.id)
+    if (fieldErrors.length > 0) {
+      return fieldErrors[0].message
+    }
   }
+
+  return null
 })
 </script>

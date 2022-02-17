@@ -6,14 +6,12 @@
   </div>
 </template>
 
-<script>
-import { defineComponent } from 'vue'
+<script setup lang="ts">
+import { defineProps } from 'vue'
 
-export default defineComponent({
-  props: {
-    type: String,
-    buttonText: String,
-    submitting: Boolean
-  }
-})
+const props = defineProps<{
+  type: string,
+  buttonText: string,
+  submitting: boolean
+}>()
 </script>

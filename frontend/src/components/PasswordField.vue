@@ -9,15 +9,14 @@
   </div>
 </template>
 
-<script>
-import { defineComponent } from 'vue'
+<script setup lang="ts">
+import { defineProps } from 'vue'
+import { ProblemDetails } from '@/infra/api'
 
-export default defineComponent({
-  props: {
-    id: String,
-    labelText: String,
-    modelValue: String,
-    problem: Object
-  }
-})
+const props = defineProps<{
+  id: string,
+  labelText: string,
+  modelValue: string,
+  problem: ProblemDetails
+}>()
 </script>
