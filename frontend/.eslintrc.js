@@ -19,6 +19,7 @@ module.exports = {
       'anonymous': 'always',
       'named': 'never',
       'asyncArrow': 'always'
-    }]
+    }],
+    '@typescript-eslint/no-non-null-assertion': 'off'
   }
 }

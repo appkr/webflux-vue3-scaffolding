@@ -11,24 +11,25 @@ import { ref } from 'vue'
 import TextField from '@/components/TextField.vue'
 import PasswordField from '@/components/PasswordField.vue'
 import Button from '@/components/Button.vue'
-import { AuthApiClient } from '@/infra/AuthApiClient'
 import { ProblemDetails } from '@/infra/api/'
 import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 
 const username = ref<string>('')
 const password = ref<string>('')
 const submitting = ref(false)
 const problem = ref<ProblemDetails>()
-const authApiClient = new AuthApiClient()
 const router = useRouter()
+const store = useStore()
 
 const onSubmit = () => {
   submitting.value = true
-  authApiClient.login({ username: username.value, password: password.value })
+  store.dispatch('login', { username: username.value, password: password.value })
     .then(() => {
       router.push('/')
     })
     .catch(err => {
+      console.log(err)
       problem.value = err
     })
     .finally(() => {

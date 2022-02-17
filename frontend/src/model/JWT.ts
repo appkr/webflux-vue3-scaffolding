@@ -24,4 +24,12 @@ export class JWT {
     this.jti = parsed?.jti
     this.clientId = parsed?.client_id
   }
+
+  getUsername(): string {
+    return this.username ?? 'unknown'
+  }
+
+  getExpiresAt(): number {
+    return this.exp! - JWT.GRACE_PERIOD_MILLIS
+  }
 }

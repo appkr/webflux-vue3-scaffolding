@@ -38,8 +38,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { AuthTokenRepository } from '@/infra/AuthTokenRepository'
-import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 
 const showMenu = ref(false)
 
@@ -47,19 +46,12 @@ const toggleMenu = () => {
   showMenu.value = !showMenu.value
 }
 
-const repository = new AuthTokenRepository()
+const store = useStore()
 const username = computed(() => {
-  return repository.getUsername()
+  return store.state.userState?.username ?? 'unknown'
 })
 
 const isLoggedIn = computed(() => {
-  // TODO 로그인/로그아웃할 때 뷰가 리프레시 되지 않는 문제 있음
-  return !repository.isExpired()
+  return store.state.userState?.isLoggedIn ?? false
 })
-
-const router = useRouter()
-const logout = () => {
-  repository.remove()
-  router.push('/login')
-}
 </script>

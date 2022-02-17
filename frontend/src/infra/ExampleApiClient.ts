@@ -1,21 +1,19 @@
 import { Configuration, Example, ExampleApi, ExampleList } from '@/infra/api/'
-import { AuthTokenRepository } from '@/infra/AuthTokenRepository'
+import store from '@/store'
 
 export class ExampleApiClient {
   private readonly apiClient: ExampleApi
-  private readonly authTokenRepository = new AuthTokenRepository()
 
   constructor() {
-    const tokenType = this.authTokenRepository.getTokenType()
-    const accessToken = this.authTokenRepository.getAccessTokenString()
+    const accessToken = store.state.userState?.accessToken ?? null
     const config = new Configuration({
       basePath: 'http://localhost:8090',
-      apiKey: `${tokenType} ${accessToken}`
+      apiKey: `bearer ${accessToken}`
     })
     this.apiClient = new ExampleApi(config)
   }
 
-  public createExample(example?: Example): Promise<Example> {
+  createExample(example?: Example): Promise<Example> {
     return new Promise((resolve, reject) => {
       this.apiClient.createExample(example)
         .then(res => {
@@ -28,7 +26,7 @@ export class ExampleApiClient {
     })
   }
 
-  public listExamples(): Promise<ExampleList> {
+  listExamples(): Promise<ExampleList> {
     return new Promise((resolve, reject) => {
       this.apiClient.listExamples()
         .then(res => {
